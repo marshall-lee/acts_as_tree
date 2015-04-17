@@ -2,5 +2,6 @@ source "https://rubygems.org"
 
 gem "rails", "~> 3.2"
 gem "acts_as_tree", path: "../"
+gem "pg" if ENV['ADAPTER'] == 'postgresql'
 
 gemspec path: "../"
