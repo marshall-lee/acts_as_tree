@@ -40,7 +40,10 @@ class MiniTest::Unit::TestCase
   end
 end
 
-ActiveRecord::Base.establish_connection adapter: "sqlite3", database: ":memory:"
+adapter = ENV['ADAPTER'] || 'sqlite3'
+database = adapter == 'sqlite3' ? ':memory:' : 'acts_as_tree_test'
+
+ActiveRecord::Base.establish_connection adapter: adapter, database: database
 
 def setup_db(counter_cache = false)
   # AR keeps printing annoying schema statements
