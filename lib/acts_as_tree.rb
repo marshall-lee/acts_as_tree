@@ -111,6 +111,13 @@ module ActsAsTree
         end
       EOV
 
+      if connection_pool.spec.config[:adapter] == 'postgresql'
+        require 'acts_as_tree/pg'
+        class_eval <<-EOV
+          include ActsAsTree::PG
+        EOV
+      end
+
       if configuration[:counter_cache]
         after_update :update_parents_counter_cache
 
