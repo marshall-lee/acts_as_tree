@@ -114,7 +114,9 @@ module ActsAsTree
       if connection_pool.spec.config[:adapter] == 'postgresql'
         require 'acts_as_tree/pg'
         class_eval <<-EOV
-          include ActsAsTree::PG
+          def ancestors
+            ActsAsTree::PG.ancestors(self, self.class, :#{configuration[:foreign_key]})
+          end
         EOV
       end
 
