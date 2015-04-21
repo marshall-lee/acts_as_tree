@@ -12,10 +12,8 @@ module ActsAsTree
       cte = Arel::Nodes::Union.new(non_recursive_part, recursive_part)
       cte = Arel::Nodes::As.new Arel::Nodes::SqlLiteral.new(tmp_name), cte
 
-      cte_select = Arel::SelectManager.new(model, tmp_table).project(primary_key).with(:recursive, cte)
-
-      scope = model.where(table[primary_key].in cte_select.ast)
-
+      scope = model.from([table, tmp_table]).where(table[primary_key].eq tmp_table[primary_key])
+      scope.arel.with(:recursive, cte)
       scope.to_a.reverse
     end
   end
