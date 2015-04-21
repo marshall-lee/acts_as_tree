@@ -117,6 +117,10 @@ module ActsAsTree
           def ancestors
             ActsAsTree::PG.ancestors(self, self.class, :#{configuration[:foreign_key]})
           end
+
+          def descendants
+            ActsAsTree::PG.descendants(self, self.class, :#{configuration[:foreign_key]}, #{configuration[:order] ? ":#{configuration[:order]}" : 'nil'})
+          end
         EOV
       end
 

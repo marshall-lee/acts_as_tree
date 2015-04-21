@@ -227,6 +227,19 @@ class TreeTest < MiniTest::Unit::TestCase
     assert_equal [], @root2.descendants
   end
 
+  if ENV['ADAPTER'] == 'postgresql'
+    def test_descendants_query_count
+      descendants = assert_queries(1) do
+        @root1.descendants
+      end
+
+      assert_no_queries do
+        descendants.each(&:children)
+        descendants.each(&:parent)
+      end
+    end
+  end
+
   def test_nullify
     root4       = TreeMixinNullify.create!
     root4_child = TreeMixinNullify.create! parent_id: root4.id
