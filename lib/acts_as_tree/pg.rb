@@ -14,7 +14,11 @@ module ActsAsTree
 
       scope = model.from([table, tmp_table]).where(table[primary_key].eq tmp_table[primary_key])
       scope.arel.with(:recursive, cte)
-      scope.to_a.reverse
+
+      by_id = scope.index_by(&:id)
+      node, nodes = object, []
+      nodes << node = by_id[node[foreign_key]] while node[foreign_key]
+      nodes
     end
   end
 end
