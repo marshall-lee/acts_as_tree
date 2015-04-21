@@ -155,6 +155,18 @@ class TreeTest < MiniTest::Unit::TestCase
     assert_equal [], @root3.ancestors
   end
 
+  if ENV['ADAPTER'] == 'postgresql'
+    def test_ancestors_query_count
+      ancestors = assert_queries(1) do
+        @child1_child.ancestors
+      end
+
+      assert_no_queries do
+        ancestors.each(&:parent)
+      end
+    end
+  end
+
   def test_root
     assert_equal @root1, TreeMixin.root
     assert_equal @root1, @root1.root
