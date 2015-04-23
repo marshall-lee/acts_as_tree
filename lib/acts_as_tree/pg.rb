@@ -28,11 +28,14 @@ module ActsAsTree
 
       def children
         records = @children
-        @object.children.extending! do
-          define_method :load do
-            @records = records
+        @object.children.extending do
+          define_method :loaded? do
+            true
           end
-        end.load
+        end.instance_eval do
+          @records = records
+          self
+        end
       end
 
       def respond_to_missing?(method, include_private = false)
